@@ -21,10 +21,26 @@ cc.Class({
 
     test(e,data){
         const logoScript = this.Logo.getComponent('Logo');
-        if (data === 'reset'){
-            logoScript.reset();
-        }else{
-            logoScript.anim0()
+        // if (data === 'reset'){
+        //     logoScript.reset();
+        // }else{
+        //     logoScript.anim0()
+        // }
+        console.log(data);
+        switch(data){
+            case 'reset':
+                logoScript.reset();
+                break;
+            case 'play':
+                logoScript.anim0();
+                break;
+            case 'moveOut':
+                logoScript.moveOut();
+                break;
+            case 'moveIn':
+                logoScript.moveIn();
+                break;
+
         }
     }
 

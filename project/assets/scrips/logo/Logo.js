@@ -80,6 +80,20 @@ cc.Class({
         this.animArr[3].runAction(cc.spawn(scale2, move2));
     },
 
+    moveOut(){
+        cc.tween(this.node)
+            .to(0.5,{y:948},{easing:'backInOut'})
+            .call(this.reset.bind(this))
+            .start();
+    },
+    moveIn(){
+        cc.tween(this.node)
+            .to(0.5,{y:451},{easing:'backInOut'})
+            .call(this.anim0.bind(this))
+            .start();
+
+    },
+
     flash(node) {
         const fadeIn = cc.fadeIn(0.3);
         const fadeOut = cc.fadeOut(0.3);

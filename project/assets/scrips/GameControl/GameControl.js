@@ -5,40 +5,53 @@ cc.Class({
         Logo:{
             type:cc.Node,
             default:null
+        },
+        LevelDesign:{
+            type: cc.Node,
+            default: null
+        },
+        Top:{
+            type:cc.Node,
+            default:null
         }
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        const logoScript = this.Logo.getComponent('Logo');
-        logoScript.anim0();
+
     },
 
     start () {
+        this.logoScript = this.Logo.getComponent('Logo');
+        this.logoScript.anim0();
+        this.LevelDesignScript = this.LevelDesign.getComponent('LevelDesign');
+        this.LevelDesignScript.resetLevel();
+        this.TopScript = this.Top.getComponent('Top');
 
     },
 
     test(e,data){
-        const logoScript = this.Logo.getComponent('Logo');
-        // if (data === 'reset'){
-        //     logoScript.reset();
-        // }else{
-        //     logoScript.anim0()
-        // }
         console.log(data);
         switch(data){
             case 'reset':
-                logoScript.reset();
+                this.logoScript.reset();
                 break;
             case 'play':
-                logoScript.anim0();
+                this.logoScript.anim0();
+                // this.LevelDesignScript.resetLevel();
+                this.LevelDesignScript.changeLevel();
+                // this.LevelDesignScript.currentLevel++;
                 break;
             case 'moveOut':
-                logoScript.moveOut();
+                this.logoScript.moveOut();
+                this.TopScript.moveOut();
+                this.LevelDesignScript.moveOut();
                 break;
             case 'moveIn':
-                logoScript.moveIn();
+                this.logoScript.moveIn();
+                this.TopScript.moveIn();
+                this.LevelDesignScript.moveIn();
                 break;
 
         }

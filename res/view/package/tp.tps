@@ -243,6 +243,21 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../boss.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>22,21,43,41</rect>
+                <key>scale9Paddings</key>
+                <rect>22,21,43,41</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../coin.png</key>
             <key type="filename">../coinLight.png</key>
             <struct type="IndividualSpriteSettings">
@@ -414,6 +429,7 @@
             <filename>../bY_1.png</filename>
             <filename>../icmain.png</filename>
             <filename>../icon_0.png</filename>
+            <filename>../boss.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

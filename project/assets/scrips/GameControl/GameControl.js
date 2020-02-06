@@ -13,13 +13,33 @@ cc.Class({
         Top:{
             type:cc.Node,
             default:null
+        },
+        Setting:{
+            type:cc.Node,
+            default:null
+        },
+        ClickGet:{
+            type:cc.Node,
+            default:null
+        },
+        Bottom:{
+            type:cc.Node,
+            default:null
+        },
+        BG:{
+            type:cc.Node,
+            default:null
+        },
+        AirPlane:{
+            type:cc.Node,
+            default:null
         }
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-
+        this.comArr = [];
     },
 
     start () {
@@ -28,7 +48,14 @@ cc.Class({
         this.LevelDesignScript = this.LevelDesign.getComponent('LevelDesign');
         this.LevelDesignScript.resetLevel();
         this.TopScript = this.Top.getComponent('Top');
-
+        this.SettingScript = this.Setting.getComponent('Setting');
+        this.ClickGetScript = this.ClickGet.getComponent('ClickGet');
+        this.BottomScript = this.Bottom.getComponent('Bottom');
+        this.BGScript = this.BG.getComponent('BG');
+        this.BGScript.play();
+        this.AirPlaneScript = this.AirPlane.getComponent('AirPlaneAutoPlay');
+        this.AirPlaneScript.play();
+        this.comArr.push(this.logoScript,this.LevelDesignScript,this.TopScript,this.SettingScript,this.ClickGetScript,this.BottomScript,this.BGScript);
     },
 
     test(e,data){
@@ -39,23 +66,31 @@ cc.Class({
                 break;
             case 'play':
                 this.logoScript.anim0();
-                // this.LevelDesignScript.resetLevel();
                 this.LevelDesignScript.changeLevel();
-                // this.LevelDesignScript.currentLevel++;
                 break;
             case 'moveOut':
-                this.logoScript.moveOut();
-                this.TopScript.moveOut();
-                this.LevelDesignScript.moveOut();
+                this.allMoveOut();
                 break;
             case 'moveIn':
-                this.logoScript.moveIn();
-                this.TopScript.moveIn();
-                this.LevelDesignScript.moveIn();
+                this.allMoveIn();
                 break;
 
         }
+    },
+
+    allMoveOut(){
+        this.comArr.forEach(item=>{
+            item.moveOut && item.moveOut();
+        });
+    },
+    allMoveIn(){
+        this.comArr.forEach(item=>{
+            item.moveIn && item.moveIn();
+        });
     }
+
+
+
 
 
     // update (dt) {},

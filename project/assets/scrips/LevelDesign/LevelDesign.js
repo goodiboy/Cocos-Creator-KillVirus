@@ -118,15 +118,19 @@ cc.Class({
     },
 
     fireTipsAnim(){
-        // cc.tween(this.FireTips)
-        //     .to(1,{angle:-10})
-        //     .to(1,{angle:10})
-        //     .union()
-        //     .repeatForever()
-        //     .start();
         this.FireTips.angle = 0;
-        const seq = cc.sequence(cc.rotateTo(1, 10), cc.rotateTo(1, -10)).repeatForever();
-        this.FireTips.runAction(seq);
+        // const seq = cc.sequence(cc.rotateTo(1, 10), cc.rotateTo(1, -10)).repeatForever();
+        // this.FireTips.runAction(seq);
+        cc.tween(this.FireTips)
+            .to(.3,{angle:-12})
+            .to(.3,{angle:12})
+            .union()
+            .repeat(2)
+            .to(.3,{angle:0})
+            .delay(1)
+            .union()
+            .repeatForever()
+            .start();
     },
 
     // logo 移动到顶部
@@ -134,7 +138,7 @@ cc.Class({
         this.FireTips.stopAllActions();
         this.FireTips.runAction(cc.fadeOut(0.3));
         cc.tween(this.node)
-            .to(1, {scale: 0.4, y: 660}, {easing: 'backIn'})
+            .to(.5, {scale: 0.4, y: 660}, {easing: 'backIn'})
             .start();
     },
 

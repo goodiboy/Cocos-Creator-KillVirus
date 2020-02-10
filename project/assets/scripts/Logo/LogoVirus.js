@@ -54,8 +54,10 @@ cc.Class({
      * @param width 随意移动的范围
      */
     animMove(x, y, width) {
-        const rx = this.random(width);
-        const ry = this.random(width);
+        const min = -width / 2;
+        const max = width / 2;
+        const rx = random(min, max);
+        const ry = random(min, max);
         const v2 = cc.v2(x + rx, y + ry);
         const move = cc.moveTo(.6, v2);
         const seq = cc.sequence(move, cc.callFunc(function () {
@@ -65,24 +67,12 @@ cc.Class({
         this.node.runAction(seq)
     },
 
-    reset(){
+    reset() {
         this.tail.opacity = 255;
         this.circle.opacity = 255;
         this.tail.stopAllActions();
         this.circle.stopAllActions();
     },
-
-
-    /**
-     * 获得一个随机值
-     * @param width 宽度
-     * @returns {number} 随机数
-     */
-    random(width) {
-        const min = -width / 2;
-        const max = width / 2;
-        return Math.floor(Math.random() * (max - min) + min);
-    }
 
 
     // update (dt) {},

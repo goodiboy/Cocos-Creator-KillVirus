@@ -1,7 +1,16 @@
 cc.Class({
     extends: cc.Component,
 
-    properties: {},
+    properties: {
+        GoldIcon:{
+            type:cc.Node,
+            default:null
+        },
+        GoldLab:{
+            type: cc.Label,
+            default: null
+        }
+    },
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -20,6 +29,9 @@ cc.Class({
         this.node.runAction(cc.moveTo(0.2, cc.v2(-152, 753)).easing(cc.easeBackInOut()));
     },
 
+    updateGold(){
+        this.GoldLab.string = goldCarry(Global.data.goldCount);
+    }
 
     // update (dt) {},
 });

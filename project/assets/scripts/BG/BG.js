@@ -16,6 +16,10 @@ cc.Class({
         cc.tween(this.node)
             .delay(1)
             .to(0.5,{scale:1.2})
+            .call(e=>{
+                Global.GameControl.TouchControl.active = true;
+                Global.GameControl.TouchControlScript.isCanTouchMove = true;
+            })
             .start()
     },
     moveOut(){

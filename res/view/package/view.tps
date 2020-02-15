@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>5.2.0</string>
+        <string>5.3.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -210,6 +210,21 @@
                 <rect>21,46,42,92</rect>
                 <key>scale9Paddings</key>
                 <rect>21,46,42,92</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../bg.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,32,64,64</rect>
+                <key>scale9Paddings</key>
+                <rect>32,32,64,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -430,6 +445,7 @@
             <filename>../icmain.png</filename>
             <filename>../icon_0.png</filename>
             <filename>../boss.png</filename>
+            <filename>../bg.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

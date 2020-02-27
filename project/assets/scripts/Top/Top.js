@@ -30,7 +30,7 @@ cc.Class({
     },
 
     updateGold(){
-        this.GoldLab.string = goldCarry(Global.data.goldCount);
+        this.GoldLab.string = goldCarry(MyGlobal.data.goldCount);
     }
 
     // update (dt) {},

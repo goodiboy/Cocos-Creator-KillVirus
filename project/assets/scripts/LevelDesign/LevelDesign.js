@@ -15,7 +15,6 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        this.currentLevel = 1;
         this.LevelBasePos = [];
         // 记录全部关卡列表的初始位置
         this.LevelItems.forEach((item, index) => {
@@ -33,7 +32,7 @@ cc.Class({
      */
     resetLevel() {
         // 从左边第开始排序关卡，当前关卡在第三个，所以要减去前面2个
-        const startLevel = this.currentLevel - 2;
+        const startLevel = MyGlobal.currentLevel - 2;
         for (let i = 0; i < this.LevelItems.length; i++) {
             const level = i + startLevel;
             const item = this.LevelItems[i];
@@ -63,7 +62,7 @@ cc.Class({
                 levelItemScript.Point[0].opacity = 255;
                 levelItemScript.Point[1].opacity = 0;
             }
-            if (level === this.currentLevel) {
+            if (level === MyGlobal.currentLevel) {
                 levelItemScript.setBossVisible(true);
             } else {
                 levelItemScript.setBossVisible(false);
@@ -108,7 +107,7 @@ cc.Class({
                         .to(0.5, {position: this.LevelBasePos[i - 1], opacity: 255})
                         .call(e => {
                             // 动画结束之后，关卡加一，重置列表位置
-                            this.currentLevel++;
+                            MyGlobal.currentLevel++;
                             this.resetLevel();
                         })
                         .start();
@@ -138,7 +137,7 @@ cc.Class({
         this.FireTips.stopAllActions();
         this.FireTips.runAction(cc.fadeOut(0.3));
         cc.tween(this.node)
-            .to(.5, {scale: 0.4, y: 660}, {easing: 'backIn'})
+            .to(.5, {scale: 0.4, y: 670}, {easing: 'backIn'})
             .start();
     },
 

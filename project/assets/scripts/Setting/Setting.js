@@ -15,7 +15,7 @@ cc.Class({
     moveOut(){
         // this.node.runAction(cc.moveTo(0.5,cc.v2(-493,392)))
         cc.tween(this.node)
-            .to(0.3,{x:-493,opacity:100})
+            .to(0.3,{x:-593,opacity:100})
             .start()
     },
     moveIn(){

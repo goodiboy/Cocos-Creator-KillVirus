@@ -17,8 +17,8 @@ cc.Class({
             .delay(1)
             .to(0.5,{scale:1.2})
             .call(e=>{
-                Global.GameControl.TouchControl.active = true;
-                Global.GameControl.TouchControlScript.isCanTouchMove = true;
+                MyGlobal.GameControl.TouchControl.active = true;
+                MyGlobal.GameControl.TouchControlScript.isCanTouchMove = true;
             })
             .start()
     },

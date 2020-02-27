@@ -44,7 +44,7 @@ cc.Class({
     beginFire() {
         this.Gun.active = true;
         this.fireBullet();
-        this.schedule(this.fireBullet,0.15)
+        this.schedule(this.fireBullet,0.15);
     },
     /**
      * 结束发射子弹
@@ -58,7 +58,7 @@ cc.Class({
      */
     fireBullet(){
         const planePos = this.node.position;
-        Global.GameControl.createBullet(planePos);
+        MyGlobal.GameControl.createBullet(planePos);
     },
 
     /**

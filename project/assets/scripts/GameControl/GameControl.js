@@ -45,24 +45,31 @@ cc.Class({
         BulletPrefab: {
             type: cc.Prefab,
             default: null
-        }
+        },
+        VirusProgressHp:{
+            type:cc.Node,
+            default:null
+        },
+
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        Global.GameControl = this;
+        const manager = cc.director.getCollisionManager();
+        manager.enabled = true;
+        manager.enabledDebugDraw = true;
+        MyGlobal.GameControl = this;
         storageLoad();
-        this.GoldPool = new cc.NodePool();
-        this.BulletPool = new cc.NodePool();
+        MyGlobal.GoldPool = new cc.NodePool();
+        MyGlobal.BulletPool = new cc.NodePool();
         this.comArr = [];
+
     },
 
     start() {
-        this.logoScript = this.Logo.getComponent('Logo');
-        this.logoScript.anim0();
+        this.LogoScript = this.Logo.getComponent('Logo');
         this.LevelDesignScript = this.LevelDesign.getComponent('LevelDesign');
-        this.LevelDesignScript.resetLevel();
         this.TopScript = this.Top.getComponent('Top');
         this.SettingScript = this.Setting.getComponent('Setting');
         this.ClickGetScript = this.ClickGet.getComponent('ClickGet');
@@ -70,10 +77,14 @@ cc.Class({
         this.BGScript = this.BG.getComponent('BG');
         this.AirPlaneScript = this.AirPlane.getComponent('AirPlane');
         this.TouchControlScript = this.TouchControl.getComponent('TouchControl');
-        this.comArr.push(this.logoScript, this.LevelDesignScript, this.TopScript, this.SettingScript, this.ClickGetScript, this.BottomScript, this.BGScript, this.AirPlaneScript);
+        this.VirusProgressHpScript = this.VirusProgressHp.getComponent('VirusProgressHp');
+        this.comArr.push(this.LogoScript, this.LevelDesignScript, this.TopScript, this.SettingScript, this.ClickGetScript, this.BottomScript, this.BGScript, this.AirPlaneScript,this.VirusProgressHpScript);
+        this.LogoScript.anim0();
+        this.LevelDesignScript.resetLevel();
         this.TopScript.updateGold();
         this.ClickGetScript.updateGold();
         this.actionPlay();
+        this.VirusProgressHpScript.reset();
     },
 
     doAction(action) {
@@ -119,12 +130,13 @@ cc.Class({
         console.log(data);
         switch (data) {
             case 'reset':
-                this.logoScript.reset();
+                this.LogoScript.reset();
+                this.VirusHpScript.reset();
                 storageDel();
                 this.TopScript.updateGold();
                 break;
             case 'play':
-                this.logoScript.anim0();
+                this.LogoScript.anim0();
                 this.LevelDesignScript.changeLevel();
                 break;
             case 'moveOut':
@@ -164,7 +176,7 @@ cc.Class({
         }));
         let notPlay = false;
         for (let i = 0; i < rmdPoint.length; i++) {
-            const gold = this.createGold(this.node);
+            const gold = getPoolNode(MyGlobal.GoldPool,this.node,this.GoldPrefab);
             gold.setPosition(srcPos);
             cc.tween(gold)
                 .to(0.3, rmdPoint[i])
@@ -182,37 +194,13 @@ cc.Class({
                             })
                             .start()
                     }
-                    this.killGold(gold);
+                    killPoolNode(MyGlobal.GoldPool,gold);
                     if (i === rmdPoint.length - 1) {
                         callback && callback();
                     }
                 })
                 .start()
         }
-    },
-
-    /**
-     * 使用对象池创建金币节点
-     * @param parentNode
-     * @returns properties.GoldPrefab|{default, type}|cc.Node 金币节点
-     */
-    createGold(parentNode) {
-        let gold = null;
-        if (this.GoldPool.size() > 0) {
-            gold = this.GoldPool.get();
-        } else {
-            gold = cc.instantiate(this.GoldPrefab);
-        }
-        gold.parent = parentNode;
-        return gold;
-    },
-
-    /**
-     * 把金币节点放回对象池中
-     * @param gold 金币节点
-     */
-    killGold(gold) {
-        this.GoldPool.put(gold);
     },
 
     /**
@@ -225,12 +213,12 @@ cc.Class({
             right = 0,
             spacing = 30; //子弹得到偏移值
         // 循环全部的子弹数，对每个子弹进行位置处理
-        for (let i = 0; i < Global.bulletCount; i++) {
+        for (let i = 0; i < MyGlobal.bulletCount; i++) {
             bullet = this.getPoolBullet();
             // 设置开始的位置
             planePos.add(cc.v2(0, 138), bullet);
             let offset = 0;
-            let singular = Global.bulletCount % 2 > 0; //判断子弹是否单数
+            let singular = MyGlobal.bulletCount % 2 > 0; //判断子弹是否单数
             if (singular && i === 0) {
                 // 如果是子弹是单数且当i===0的时候什么也不用做，offset等于0，从中间发射
             } else {
@@ -248,6 +236,7 @@ cc.Class({
                 }
             }
             const bulletScript = bullet.getComponent('Bullet');
+            bulletScript.init();
             bulletScript.setSecondPos(bullet.position.add(cc.v2(offset, 100)));
         }
     },
@@ -256,23 +245,10 @@ cc.Class({
      * @returns {properties.BulletPrefab|{default, type}|cc.Node}
      */
     getPoolBullet() {
-        let bullet = null;
-        if (this.BulletPool.size() > 0) {
-            bullet = this.BulletPool.get();
-        } else {
-            bullet = cc.instantiate(this.BulletPrefab);
-        }
-        bullet.parent = this.node;
+        let bullet = getPoolNode(MyGlobal.BulletPool,this.node,this.BulletPrefab);
         // 设置子弹是否可以移动的状态，（判断是否大于1个子弹）
         const bulletScript = bullet.getComponent('Bullet');
         bulletScript.initMoveState();
         return bullet;
     },
-    /**
-     * 把子弹节点放回对象池中
-     * @param bullet 子弹节点
-     */
-    killBullet(bullet) {
-        this.BulletPool.put(bullet)
-    }
 });

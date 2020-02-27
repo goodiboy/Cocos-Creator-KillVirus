@@ -1,16 +1,42 @@
-window.Global = {
+const MyGlobal = {
     ACTION_RESET: 0, //重置
     ACTION_PLAY: 1, // 开始
     ACTION_MOVE_OUT: 2, //移出
     ACTION_MOVE_IN: 3, // 移入
-    bulletCount:4 //子弹的数量
+    bulletCount: 1, //子弹的数量
+    currentLevel:1, // 当前关卡数
+    /**
+     * notStarted 未开始
+     * isPlaying 游戏中
+     * isPause 暂停中
+     */
+    gameStatus:'notStarted', //是否在游戏进行中
+    LevelData: [
+        {
+            hp: [[1, 1, 1, 1, 10, 5, 1, 1, 1],
+                [1, 1, 1, 1, 10, 5, 1, 1, 1],
+                [1, 1, 1, 1, 10, 5, 1, 1, 1]],
+            scale: {
+                '1': 0.6,
+                '10': 1,
+                '5': 0.8,
+            },
+            color: {
+                '1': new cc.Color(255, 255, 166),
+                '5': new cc.Color(122, 255, 116),
+                '10': new cc.Color(255, 116, 116),
+            },
+            next: 10, virus: [0]
+        },
+    ]
+
 };
 
 /**
  * 格式化数据
  */
-function initGlobalData() {
-    window.Global.data = {
+function initMyGlobalData() {
+    MyGlobal.data = {
         goldCount: 0,
         taskGold: 0
     }
@@ -43,8 +69,8 @@ function goldCarry(gold) {
  */
 function storageDel() {
     try {
-        cc.sys.localStorage.removeItem('globalData');
-        initGlobalData()
+        cc.sys.localStorage.removeItem('MyGlobalData');
+        initMyGlobalData()
     } catch (e) {
         console.log(e);
     }
@@ -55,7 +81,7 @@ function storageDel() {
  */
 function storageSave() {
     try {
-        cc.sys.localStorage.setItem('globalData', JSON.stringify(Global.data));
+        cc.sys.localStorage.setItem('MyGlobalData', JSON.stringify(MyGlobal.data));
     } catch (e) {
         console.log(e);
     }
@@ -67,14 +93,14 @@ function storageSave() {
 function storageLoad() {
     let data;
     try {
-        data = cc.sys.localStorage.getItem('globalData');
+        data = cc.sys.localStorage.getItem('MyGlobalData');
     } catch (e) {
         console.log(e);
     }
     if (data) {
-        Global.data = JSON.parse(data);
+        MyGlobal.data = JSON.parse(data);
     } else {
-        initGlobalData();
+        initMyGlobalData();
     }
 }
 
@@ -123,3 +149,31 @@ function getPoint(rx, ry, radius, count) {
     }
     return point;
 }
+
+/**
+ * 使用对象池创建金币节点
+ * @returns properties.GoldPrefab|{default, type}|cc.Node 金币节点
+ * @param pool 对象池
+ * @param parent 父节点
+ * @param instantiateObj 实例化的对象
+ */
+function getPoolNode(pool, parent, instantiateObj) {
+    let poolNode = null;
+    if (pool.size() > 0) {
+        poolNode = pool.get();
+    } else {
+        poolNode = cc.instantiate(instantiateObj);
+    }
+    poolNode.parent = parent;
+    return poolNode;
+}
+
+/**
+ * 把对象节点放回对象池中
+ * @param pool 对象池
+ * @param poolNode 需要保存的对象
+ */
+function killPoolNode(pool, poolNode) {
+    pool.put(poolNode);
+}
+

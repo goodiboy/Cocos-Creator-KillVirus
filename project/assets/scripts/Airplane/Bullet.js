@@ -5,12 +5,26 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
+    onLoad(){
+      this.aaa = 111;
+    },
+
+    /**
+     * 初始化
+     */
+    init(){
+      this.isHit = false;
+    },
+
+    onCollisionEnter(other, self) {
+        killPoolNode(MyGlobal.BulletPool, this.node);
+    },
 
     /**
      * 初始化是否可以移动
      */
-    initMoveState(){
-        this.upMove = Global.bulletCount <= 1;
+    initMoveState() {
+        this.upMove = MyGlobal.bulletCount <= 1;
     },
 
     /**
@@ -33,10 +47,10 @@ cc.Class({
      */
     update(dt) {
         // console.log(dt);
-        if (!this.upMove) return;
+        if (!this.upMove || MyGlobal.gameStatus !== 'isPlaying' ) return;
         this.node.y += 1000 * dt;
         if (this.node.y > 900) {
-            Global.GameControl.BulletPool.put(this.node);
+            MyGlobal.BulletPool.put(this.node);
         }
     },
 });

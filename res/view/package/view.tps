@@ -379,6 +379,36 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">../xueTiao.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>160,5,321,9</rect>
+                <key>scale9Paddings</key>
+                <rect>160,5,321,9</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">../xueTiaoBg.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>163,7,325,13</rect>
+                <key>scale9Paddings</key>
+                <rect>163,7,325,13</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">../z2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -446,6 +476,8 @@
             <filename>../icon_0.png</filename>
             <filename>../boss.png</filename>
             <filename>../bg.png</filename>
+            <filename>../xueTiao.png</filename>
+            <filename>../xueTiaoBg.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

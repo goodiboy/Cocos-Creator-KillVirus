@@ -28,7 +28,7 @@ cc.Class({
         let pre = this._nowTime / this._needTime;
         if (pre > 1) {
             pre = 1;
-            Global.data.taskGold += 100;
+            MyGlobal.data.taskGold += 100;
             this.updateGold();
             storageSave();
             this._nowTime = 0;
@@ -37,12 +37,12 @@ cc.Class({
     },
 
     updateGold() {
-        this.taskGold.string = goldCarry(Global.data.taskGold);
+        this.taskGold.string = goldCarry(MyGlobal.data.taskGold);
     },
 
     moveOut() {
         cc.tween(this.node)
-            .to(0.3, {x: 520, opacity: 100})
+            .to(0.3, {x: 620, opacity: 100})
             .start()
     },
     moveIn() {
@@ -51,15 +51,15 @@ cc.Class({
             .start()
     },
     onClickHandle(e, data) {
-        if (Global.data.taskGold < 1)return;
-        const Coin = Global.GameControl.Top.getChildByName('coin');
-        const coinPos = Global.GameControl.Top.convertToWorldSpaceAR(Coin.position);
-        const targetPos = Global.GameControl.node.convertToNodeSpaceAR(coinPos);
-        Global.data.goldCount += Global.data.taskGold;
-        Global.data.taskGold = 0;
+        if (MyGlobal.data.taskGold < 1)return;
+        const Coin = MyGlobal.GameControl.Top.getChildByName('coin');
+        const coinPos = MyGlobal.GameControl.Top.convertToWorldSpaceAR(Coin.position);
+        const targetPos = MyGlobal.GameControl.node.convertToNodeSpaceAR(coinPos);
+        MyGlobal.data.goldCount += MyGlobal.data.taskGold;
+        MyGlobal.data.taskGold = 0;
         storageSave();
-        Global.GameControl.createGoldAnim(this.node.position, targetPos, Coin, 300, 18,()=>{
-            Global.GameControl.TopScript.updateGold();
+        MyGlobal.GameControl.createGoldAnim(this.node.position, targetPos, Coin, 300, 18,()=>{
+            MyGlobal.GameControl.TopScript.updateGold();
             this.updateGold();
         });
     },

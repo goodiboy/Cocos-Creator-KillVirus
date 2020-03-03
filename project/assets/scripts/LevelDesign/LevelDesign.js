@@ -148,6 +148,19 @@ cc.Class({
         cc.tween(this.node)
             .to(0.5, {scale: 1, y: 166}, {easing: 'backOut'})
             .start();
-    }
+    },
+
+    /**
+     * 结算动画
+     */
+    settleAnim(){
+       cc.tween(this.node)
+           .parallel(
+               cc.tween().to(0.5,{scale:1},{easing:'backOut'}),
+               cc.tween().to(0.5,{y:412},{easing:'backOut'})
+           )
+           .start();
+
+    },
     // update (dt) {},
 });

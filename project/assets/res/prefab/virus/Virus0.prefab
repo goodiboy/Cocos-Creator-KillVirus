@@ -961,7 +961,6 @@
     "Body": {
       "__id__": 20
     },
-    "VirusMake": null,
     "_id": ""
   },
   {
@@ -972,7 +971,7 @@
       "__id__": 1
     },
     "_enabled": true,
-    "tag": 0,
+    "tag": 300,
     "_offset": {
       "__type__": "cc.Vec2",
       "x": 0,

@@ -46,10 +46,18 @@ cc.Class({
             type: cc.Prefab,
             default: null
         },
-        VirusProgressHp:{
-            type:cc.Node,
-            default:null
+        VirusProgressHp: {
+            type: cc.Node,
+            default: null
         },
+        BulletMake: {
+            type: cc.Node,
+            default: null
+        },
+        PlaneDeathAnim: {
+            type: cc.Animation,
+            default: null
+        }
 
     },
 
@@ -58,7 +66,7 @@ cc.Class({
     onLoad() {
         const manager = cc.director.getCollisionManager();
         manager.enabled = true;
-        manager.enabledDebugDraw = true;
+        // manager.enabledDebugDraw = true;
         MyGlobal.GameControl = this;
         storageLoad();
         MyGlobal.GoldPool = new cc.NodePool();
@@ -78,7 +86,7 @@ cc.Class({
         this.AirPlaneScript = this.AirPlane.getComponent('AirPlane');
         this.TouchControlScript = this.TouchControl.getComponent('TouchControl');
         this.VirusProgressHpScript = this.VirusProgressHp.getComponent('VirusProgressHp');
-        this.comArr.push(this.LogoScript, this.LevelDesignScript, this.TopScript, this.SettingScript, this.ClickGetScript, this.BottomScript, this.BGScript, this.AirPlaneScript,this.VirusProgressHpScript);
+        this.comArr.push(this.LogoScript, this.LevelDesignScript, this.TopScript, this.SettingScript, this.ClickGetScript, this.BottomScript, this.BGScript, this.AirPlaneScript, this.VirusProgressHpScript);
         this.LogoScript.anim0();
         this.LevelDesignScript.resetLevel();
         this.TopScript.updateGold();
@@ -131,7 +139,7 @@ cc.Class({
         switch (data) {
             case 'reset':
                 this.LogoScript.reset();
-                this.VirusHpScript.reset();
+                this.VirusProgressHpScript.reset();
                 storageDel();
                 this.TopScript.updateGold();
                 break;
@@ -143,7 +151,7 @@ cc.Class({
                 this.actionMoveOut();
                 break;
             case 'moveIn':
-                this.TouchControlScript.StopMask.runAction(cc.fadeOut(0.5));
+                // this.TouchControlScript.StopMask.runAction(cc.fadeOut(0.5));
                 this.actionMoveIn();
                 break;
         }
@@ -154,13 +162,32 @@ cc.Class({
      * @param srcPos 金币的出现源坐标
      * @param targetPos 需要飘到的目标坐标
      * @param targetNode 目标对象，用于做金币飘到之后的缩放效果
+     * @param srcParent 金币添加到的父节点
      * @param radius 金币出现的半径
      * @param goldCount 金币出现的数量
      * @param callback 回调函数
      */
-    createGoldAnim(srcPos, targetPos, targetNode, radius, goldCount, callback) {
+    createGoldAnim(srcPos, targetPos, targetNode, srcParent, radius, goldCount, callback) {
+        cc.tween(targetNode).stop();
+
         // 获得每个点的数组
-        const point = getPoint(srcPos.x, srcPos.y, radius, goldCount);
+        const point = getPoint(srcPos.x, srcPos.y, radius, goldCount > 12 ? 12 : goldCount);
+        // 如果金币的数量少于3，那么直接飞到目标位置，不用圆等分再飞
+        if (goldCount < 3) {
+            for (let i = 0; i < point.length; i++) {
+                const gold = getPoolNode(MyGlobal.GoldPool, srcParent, this.GoldPrefab);
+                gold.setPosition(srcPos);
+                cc.tween(gold)
+                    .delay(i * 0.2)
+                    .to(0.5, {position: targetPos})
+                    .call(e => {
+                        this.goldFlyToTargetAnim(targetNode, gold, i, point, callback)
+                    })
+                    .start();
+            }
+            return;
+        }
+
         // 对每个金币的距离进行随机摆放
         const rmdPoint = point.map(item => {
             item.x += random(0, 50);
@@ -174,32 +201,44 @@ cc.Class({
             const disB = pointsDistance(b, targetPos);
             return disA - disB;
         }));
-        let notPlay = false;
         for (let i = 0; i < rmdPoint.length; i++) {
-            const gold = getPoolNode(MyGlobal.GoldPool,this.node,this.GoldPrefab);
+            const gold = getPoolNode(MyGlobal.GoldPool, srcParent, this.GoldPrefab);
             gold.setPosition(srcPos);
             cc.tween(gold)
                 .to(0.3, rmdPoint[i])
                 .delay(i * 0.04)
                 .to(0.5, {position: targetPos})
                 .call(e => {
-                    if (!notPlay) {
-                        notPlay = true;
-                        // 对目标金币进行放大缩小
-                        cc.tween(targetNode)
-                            .to(0.2, {scale: 0.8})
-                            .to(0.2, {scale: 0.5})
-                            .call(e => {
-                                notPlay = false;
-                            })
-                            .start()
-                    }
-                    killPoolNode(MyGlobal.GoldPool,gold);
-                    if (i === rmdPoint.length - 1) {
-                        callback && callback();
-                    }
+                    this.goldFlyToTargetAnim(targetNode, gold, i, rmdPoint, callback)
                 })
                 .start()
+        }
+    },
+
+    /**
+     * 金币飞行目标节点的动画
+     * @param targetNode 目标节点
+     * @param gold 金币
+     * @param index 金币的下标
+     * @param rmdPoint 金币的数组
+     * @param callback 回调函数
+     */
+    goldFlyToTargetAnim(targetNode, gold, index, rmdPoint, callback) {
+        if (!targetNode.isplayAnim) {
+            targetNode.isplayAnim = true;
+            // 对目标金币进行放大缩小
+            cc.tween(targetNode)
+                .stop()
+                .by(0.2, {scale: 0.3})
+                .by(0.2, {scale: -0.3})
+                .call(e => {
+                    targetNode.isplayAnim = false;
+                })
+                .start()
+        }
+        killPoolNode(MyGlobal.GoldPool, gold);
+        if (index === rmdPoint.length - 1) {
+            callback && callback();
         }
     },
 
@@ -245,10 +284,32 @@ cc.Class({
      * @returns {properties.BulletPrefab|{default, type}|cc.Node}
      */
     getPoolBullet() {
-        let bullet = getPoolNode(MyGlobal.BulletPool,this.node,this.BulletPrefab);
+        let bullet = getPoolNode(MyGlobal.BulletPool, this.BulletMake, this.BulletPrefab);
         // 设置子弹是否可以移动的状态，（判断是否大于1个子弹）
         const bulletScript = bullet.getComponent('Bullet');
         bulletScript.initMoveState();
         return bullet;
     },
+
+    /**
+     * 结算动画
+     */
+    settleAnim() {
+        this.LevelDesignScript.settleAnim();
+        this.VirusProgressHpScript.settleAnim();
+    },
+
+    /**
+     * 飞机死亡爆炸动画
+     */
+    planeDeathHandle() {
+        const PlaneDeathNode = this.PlaneDeathAnim.node;
+        this.AirPlane.active = false;
+        PlaneDeathNode.position = this.AirPlane.getPosition();
+        PlaneDeathNode.active = true;
+        this.PlaneDeathAnim.play();
+        this.PlaneDeathAnim.once('finished', function () {
+            PlaneDeathNode.active = false;
+        }, this)
+    }
 });

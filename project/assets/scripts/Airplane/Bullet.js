@@ -5,15 +5,14 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad(){
-      this.aaa = 111;
+    onLoad() {
     },
 
     /**
      * 初始化
      */
-    init(){
-      this.isHit = false;
+    init() {
+        this.isHit = false;
     },
 
     onCollisionEnter(other, self) {
@@ -46,8 +45,12 @@ cc.Class({
      * @param dt 距离上次刷新的时间
      */
     update(dt) {
-        // console.log(dt);
-        if (!this.upMove || MyGlobal.gameStatus !== 'isPlaying' ) return;
+        // 如果是游戏结束或者是游戏通过，则移除子弹
+        if (MyGlobal.gameOver || MyGlobal.isGamePass) {
+            MyGlobal.BulletPool.put(this.node);
+            return;
+        }
+        if (!this.upMove || MyGlobal.gameStatus !== 'isPlaying') return;
         this.node.y += 1000 * dt;
         if (this.node.y > 900) {
             MyGlobal.BulletPool.put(this.node);

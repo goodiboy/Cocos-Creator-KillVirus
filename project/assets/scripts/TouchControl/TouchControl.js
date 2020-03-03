@@ -11,9 +11,6 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        // 是否可以触摸
-        this.isCanTouchMove = false;
-        this.startGame = false;
         // 事件绑定
         this.node.on(cc.Node.EventType.TOUCH_START, this.TouchStart, this);
         this.node.on(cc.Node.EventType.TOUCH_MOVE, this.TouchMove, this);
@@ -24,7 +21,7 @@ cc.Class({
     TouchStart(event) {
         console.log('touchstart');
         // 前置动画还没有完成之前，不能开始游戏
-        if (!this.isCanTouchMove) return;
+        if (!MyGlobal.isCanTouch || MyGlobal.gameStatus === 'isPlaying') return;
         // 如果游戏是从未开始变成开始的情况，需要执行的动画
         if (MyGlobal.gameStatus === 'notStarted') {
             MyGlobal.GameControl.doAction(MyGlobal.ACTION_MOVE_OUT);
@@ -43,7 +40,7 @@ cc.Class({
 
     TouchEnd(event) {
         console.log('touchend');
-        if (MyGlobal.gameStatus === 'notStarted') return;
+        if (MyGlobal.gameStatus !== 'isPlaying') return;
         this.unschedule(this.planeFire);
         MyGlobal.gameStatus = 'isPause';
         MyGlobal.GameControl.AirPlaneScript.endFire();

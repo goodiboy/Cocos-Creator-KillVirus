@@ -19,7 +19,7 @@ cc.Class({
 
     init() {
         this.level = MyGlobal.currentLevel - 1; // 当前等级下标
-        this.currentData = MyGlobal.LevelData[this.level]; // 当前等级的数据
+        this.currentData = MyGlobal.LevelData[this.level] ? MyGlobal.LevelData[this.level] : MyGlobal.LevelData[MyGlobal.LevelData.length - 1]; // 当前等级的数据
         this.currentPart = 0; // 第几波病毒（根据数组长度）
         this.nextPartValue = this.currentData.next; // 获取下一波的需要打到的值
         this.allHp = 0; // 全部的hp

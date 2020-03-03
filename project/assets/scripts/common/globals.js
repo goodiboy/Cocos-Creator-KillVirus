@@ -3,19 +3,25 @@ const MyGlobal = {
     ACTION_PLAY: 1, // 开始
     ACTION_MOVE_OUT: 2, //移出
     ACTION_MOVE_IN: 3, // 移入
-    bulletCount: 1, //子弹的数量
-    currentLevel:1, // 当前关卡数
+    bulletCount: 4, //子弹的数量
+    currentLevel: 1, // 当前关卡数
+    isCanTouch: false, //是否可以触摸
+    timeDownValue: 3, //复活倒计时
+    adTime: 2, //广告时间
+    cycleGold: 2, //进度条每转一圈增加的金币数
+    gameOver: false, //飞机是否死亡
+    isGamePass: false, // 是否已经过关
     /**
      * notStarted 未开始
      * isPlaying 游戏中
      * isPause 暂停中
      */
-    gameStatus:'notStarted', //是否在游戏进行中
+    gameStatus: 'notStarted', //是否在游戏进行中
     LevelData: [
         {
-            hp: [[1, 1, 1, 1, 10, 5, 1, 1, 1],
-                [1, 1, 1, 1, 10, 5, 1, 1, 1],
-                [1, 1, 1, 1, 10, 5, 1, 1, 1]],
+            hp: [[3, 2, 3, 4, 10, 5, 1, 1, 1],
+                [3, 2, 3, 4, 10, 5, 1, 1, 1],
+                [3, 2, 3, 4, 10, 5, 1, 1, 1]],
             scale: {
                 '1': 0.6,
                 '10': 1,
@@ -177,3 +183,13 @@ function killPoolNode(pool, poolNode) {
     pool.put(poolNode);
 }
 
+/**
+ * 坐标转换
+ * @param sourceNode 当前节点
+ * @param targetNode 需要转换到目标节点的坐标
+ * @returns {cc.Vec2 | number | * | Float32Array | "auto" | string}
+ */
+function convertPos(sourceNode, targetNode) {
+    const worldPos = sourceNode.parent.convertToWorldSpaceAR(sourceNode.position);
+    return targetNode.convertToNodeSpaceAR(worldPos);
+}

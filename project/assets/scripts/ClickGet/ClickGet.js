@@ -28,7 +28,7 @@ cc.Class({
         let pre = this._nowTime / this._needTime;
         if (pre > 1) {
             pre = 1;
-            MyGlobal.data.taskGold += 100;
+            MyGlobal.data.taskGold += MyGlobal.cycleGold;
             this.updateGold();
             storageSave();
             this._nowTime = 0;
@@ -50,15 +50,19 @@ cc.Class({
             .to(0.3, {x: 373, opacity: 255})
             .start()
     },
-    onClickHandle(e, data) {
-        if (MyGlobal.data.taskGold < 1)return;
-        const Coin = MyGlobal.GameControl.Top.getChildByName('coin');
-        const coinPos = MyGlobal.GameControl.Top.convertToWorldSpaceAR(Coin.position);
-        const targetPos = MyGlobal.GameControl.node.convertToNodeSpaceAR(coinPos);
+
+    /**
+     * 点击领取金币
+     */
+    onClickHandle() {
+        if (MyGlobal.data.taskGold < 1) return;
+        const Coin = MyGlobal.GameControl.TopScript.GoldIcon;
+        const targetPos = convertPos(Coin,MyGlobal.GameControl.node);
+        const addGold = MyGlobal.data.taskGold;
         MyGlobal.data.goldCount += MyGlobal.data.taskGold;
         MyGlobal.data.taskGold = 0;
         storageSave();
-        MyGlobal.GameControl.createGoldAnim(this.node.position, targetPos, Coin, 300, 18,()=>{
+        MyGlobal.GameControl.createGoldAnim(this.node.position, targetPos, Coin, MyGlobal.GameControl.node, 300, addGold, () => {
             MyGlobal.GameControl.TopScript.updateGold();
             this.updateGold();
         });
